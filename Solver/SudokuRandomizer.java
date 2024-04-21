@@ -1,11 +1,11 @@
-package Backend;
+package Solver;
 public class SudokuRandomizer {
     int[] matrix_[];
     int board_size_; // number of columns/rows.
     int SRN_; // square root of N
     int num_holes_; // No. Of missing digits
 
-    SudokuRandomizer(int board_size, int num_holes) {
+    public SudokuRandomizer(int board_size, int num_holes) {
         this.board_size_ = board_size;
         this.num_holes_ = num_holes;
 

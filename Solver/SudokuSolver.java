@@ -1,7 +1,7 @@
-package Backend;
+package Solver;
 
 public class SudokuSolver {
-    public static int[] find_possible_values(int[][] matrix, int x, int y) {
+    public int[] find_possible_values(int[][] matrix, int x, int y) {
         int[] all_values = new int[9];
         for (int i = 0; i < 9; i++) {
             all_values[i] = 1;
@@ -30,7 +30,7 @@ public class SudokuSolver {
         return convert_possible_values(all_values);
     }
 
-    private static int[] convert_possible_values(int[] all_values) {
+    private int[] convert_possible_values(int[] all_values) {
         int i = 0;
         int[] possible_values = new int[9];
         for (int j = 0; j < 9; j++) {
@@ -42,7 +42,7 @@ public class SudokuSolver {
         return remove_trailing_zeros(possible_values);
     }
 
-    private static int[] remove_trailing_zeros(int[] possible_values) {
+    private int[] remove_trailing_zeros(int[] possible_values) {
         int i = 8;
         while (i >= 0 && possible_values[i] == 0) {
             i--;
@@ -54,7 +54,7 @@ public class SudokuSolver {
         return new_possible_values;
     }
 
-    public static void solve(int[][] matrix) {
+    public void solve(int[][] matrix) {
         if (isSolved(matrix)) {
             return;
         }
@@ -81,7 +81,7 @@ public class SudokuSolver {
         }
     }
 
-    private static boolean isSolved(int[][] matrix) {
+    private boolean isSolved(int[][] matrix) {
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
                 if (matrix[x][y] == 0) {
@@ -92,7 +92,7 @@ public class SudokuSolver {
         return true;
     }
 
-    public static void print_matrix(int[][] matrix) {
+    public void printSudoku(int[][] matrix) {
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
                 System.out.print(matrix[x][y] + " ");
@@ -105,10 +105,11 @@ public class SudokuSolver {
         SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 20);
         sudokuRandomizer.fillValues();
         int[][] sudoku = sudokuRandomizer.getSudoku();
-        print_matrix(sudoku);
+        sudokuRandomizer.printSudoku();
         System.out.println();
 
-        SudokuSolver.solve(sudoku);
-        print_matrix(sudoku);
+        SudokuSolver sudokuSolver = new SudokuSolver();
+        sudokuSolver.solve(sudoku);
+        sudokuSolver.printSudoku(sudoku);
     }
 }

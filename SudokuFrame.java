@@ -1,6 +1,7 @@
 import BoardScreen.SudokuBoard;
-import Backend.SudokuRandomizer;
-import Backend.SudokuSolver;
+import Solver.SudokuRandomizer;
+import Solver.SudokuSolver;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -64,6 +65,19 @@ public class SudokuFrame extends JFrame {
     }
 
     public static void main(String[] args) {
+        // Sudoku generator driver
+        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 20);
+        sudokuRandomizer.fillValues();
+        int[][] sudoku = sudokuRandomizer.getSudoku();
+        sudokuRandomizer.printSudoku();
+        System.out.println();
+
+        // Sudoku solver driver
+        SudokuSolver sudokuSolver = new SudokuSolver();
+        sudokuSolver.solve(sudoku);
+        sudokuSolver.printSudoku(sudoku);
+
+        // Sudoku frame driver
         SwingUtilities.invokeLater(SudokuFrame::new);
     }
 }
