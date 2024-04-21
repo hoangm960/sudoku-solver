@@ -30,9 +30,8 @@ public class SudokuBoard extends JPanel{
                 add(cell);
             }
 
-            // Decorate the board here
-            // TO DO:
-            
+            //TODO: Decorate the board here
+
         }
         setVisible(true);
     }
@@ -42,7 +41,7 @@ public class SudokuBoard extends JPanel{
         @Override
         public void keyPressed (KeyEvent e) {
             int[] position = findPosition(e);
-            
+
             if (position == null) {
                 return;
             }
@@ -54,19 +53,19 @@ public class SudokuBoard extends JPanel{
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
                     if (col > 0)
-                        cells[row][col-1].requestFocus();                    
+                        cells[row][col-1].requestFocus();
                     break;
                 case KeyEvent.VK_RIGHT:
                     if (col < size-1)
-                        cells[row][col + 1].requestFocus(); 
+                        cells[row][col + 1].requestFocus();
                     break;
                 case KeyEvent.VK_UP:
                     if (row > 0)
-                        cells[row-1][col].requestFocus(); 
+                        cells[row-1][col].requestFocus();
                     break;
                 case KeyEvent.VK_DOWN:
                     if (row < size-1)
-                        cells[row+1][col].requestFocus(); 
+                        cells[row+1][col].requestFocus();
                     break;
             }
         }
@@ -85,9 +84,7 @@ public class SudokuBoard extends JPanel{
 
             char inputChar = e.getKeyChar();
 
-            // Add the condition to check if the block is initially empty, then input the number
-            // else cannot change the existing number in the cell.
-            // TO DO
+            //TODO: Add the condition to check if the block is initially empty, then input the number else cannot change the existing number in the cell.
 
             // Check if the typed character is a digit from 1 to 9
             if (inputChar >= '1' && inputChar <= '9') {
@@ -114,7 +111,7 @@ public class SudokuBoard extends JPanel{
         }
     }
 
-    
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new SudokuBoard());
     }

@@ -1,4 +1,6 @@
 import BoardScreen.SudokuBoard;
+import Backend.SudokuRandomizer;
+import Backend.SudokuSolver;
 import javax.swing.*;
 import java.awt.*;
 
@@ -20,7 +22,7 @@ public class SudokuFrame extends JFrame {
         emptyPanel.setPreferredSize(new Dimension(10, 30));
         holder.add(emptyPanel, BorderLayout.NORTH);
 
-        
+
         //Board panel: contains the sudoku board class
         JPanel boardPanel = new JPanel();
         boardPanel.setBackground(Color.blue);
@@ -32,7 +34,7 @@ public class SudokuFrame extends JFrame {
         SudokuBoard displayBoard = new SudokuBoard();
         // Add instance to the board panel
         boardPanel.add(displayBoard, BorderLayout.CENTER);
-        
+
 
         // Buttons panel
         JPanel buttonPanel = new JPanel();

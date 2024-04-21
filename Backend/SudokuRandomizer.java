@@ -1,107 +1,169 @@
 package Backend;
 public class SudokuRandomizer {
-    public int[][] generateRandomSudoku() {
+    int[] matrix_[];
+    int board_size_; // number of columns/rows.
+    int SRN_; // square root of N
+    int num_holes_; // No. Of missing digits
 
-        int[][] sudoku = new int[9][9];
+    SudokuRandomizer(int board_size, int num_holes) {
+        this.board_size_ = board_size;
+        this.num_holes_ = num_holes;
 
-        // Initialize all cells to 0
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                sudoku[i][j] = 0;
-            }
-        }
+        SRN_ = (int) Math.sqrt(board_size);
 
-        // Randomly fill diagonal sudoku boxes
-        int[] numbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        for (int i = 0; i < 3; i++) {
-            shuffleArray(numbers);
-            for (int j = 0; j < 3; j++) {
-                sudoku[i * 3][j * 3] = numbers[j * 3];
-                sudoku[i * 3 + 1][j * 3 + 1] = numbers[j * 3 + 1];
-                sudoku[i * 3 + 2][j * 3 + 2] = numbers[j * 3 + 2];
-            }
-        }
-
-        // Randomly remove 40-50 entries to create holes
-        int holes = (int) (Math.random() * 10) + 40;
-        for (int i = 0; i < holes; i++) {
-            int row = (int) (Math.random() * 9);
-            int col = (int) (Math.random() * 9);
-            sudoku[row][col] = 0;
-        }
-
-        if (!isValid(sudoku)) {
-            return generateRandomSudoku();
-        }
-
-        return sudoku;
+        matrix_ = new int[board_size][board_size];
     }
 
-    // Fisher-Yates shuffle algorithm
-    public void shuffleArray(int[] array) {
-        for (int i = array.length - 1; i > 0; i--) {
-            int j = (int) (Math.random() * (i + 1));
-            int temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
+    public void fillValues() {
+        // Fill the diagonal of SRN x SRN matrices
+        fillDiagonal();
+
+        // Fill remaining blocks
+        fillRemaining(0, SRN_);
+
+        // Remove Randomly K digits to make game
+        removeKDigits();
+    }
+
+    // Fill the diagonal SRN x SRN matrixes
+    void fillDiagonal() {
+        for (int i = 0; i < board_size_; i = i + SRN_)
+            fillBox(i, i);
+    }
+
+    // Fill a 3 x 3 matrix.
+    void fillBox(int row, int col) {
+        int num;
+        for (int i = 0; i < SRN_; i++) {
+            for (int j = 0; j < SRN_; j++) {
+                do {
+                    num = randomGenerator(board_size_);
+                } while (!isNumInBox(row, col, num));
+
+                matrix_[row + i][col + j] = num;
+            }
         }
     }
 
-    public static boolean isValid(int[][] matrix) {
-        // Check rows
-        for (int i = 0; i < 9; i++) {
-            boolean[] nums = new boolean[9];
-            for (int j = 0; j < 9; j++) {
-                if (matrix[i][j] != 0) {
-                    if (nums[matrix[i][j] - 1])
-                        return false;
-                    nums[matrix[i][j] - 1] = true;
-                }
-            }
-        }
+    // Random generator
+    int randomGenerator(int num) {
+        return (int) Math.floor((Math.random() * num + 1));
+    }
 
-        // Check columns
-        for (int j = 0; j < 9; j++) {
-            boolean[] nums = new boolean[9];
-            for (int i = 0; i < 9; i++) {
-                if (matrix[i][j] != 0) {
-                    if (nums[matrix[i][j] - 1])
-                        return false;
-                    nums[matrix[i][j] - 1] = true;
-                }
-            }
-        }
-
-        // Check 3x3 sub-grids
-        for (int i = 0; i < 9; i += 3) {
-            for (int j = 0; j < 9; j += 3) {
-                boolean[] nums = new boolean[9];
-                for (int k = 0; k < 3; k++) {
-                    for (int l = 0; l < 3; l++) {
-                        if (matrix[i + k][j + l] != 0) {
-                            if (nums[matrix[i + k][j + l] - 1])
-                                return false;
-                            nums[matrix[i + k][j + l] - 1] = true;
-                        }
-                    }
-                }
-            }
-        }
+    // Returns false if given 3 x 3 block contains num.
+    boolean isNumInBox(int rowStart, int colStart, int num) {
+        for (int i = 0; i < SRN_; i++)
+            for (int j = 0; j < SRN_; j++)
+                if (matrix_[rowStart + i][colStart + j] == num)
+                    return false;
 
         return true;
     }
 
-    public static void print_matrix(int[][] matrix) {
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
-                System.out.print(matrix[x][y] + " ");
+    // A recursive function to fill remaining matrix
+    boolean fillRemaining(int i, int j) {
+        // j reach to the end of the row
+        if (j >= board_size_) {
+            // Move to next row
+            if (i < board_size_) {
+                i = i + 1;
+                j = 0;
             }
-            System.out.println();
+
+            // Reach the end of the matrix
+            else
+                return true;
+        }
+
+        // Avoid diagonal 3x3 matrixes
+        if (i < SRN_) {
+            if (j < SRN_)
+                j = SRN_;
+        } else if (i < board_size_ - SRN_) {
+            if (j == (int) (i / SRN_) * SRN_)
+                j = j + SRN_;
+            } else {
+                if (j == board_size_ - SRN_) {
+                    i = i + 1;
+                    j = 0;
+                if (i >= board_size_)
+                    return true;
+            }
+        }
+
+        for (int num = 1; num <= board_size_; num++) {
+            if (CheckIfSafe(i, j, num)) {
+                matrix_[i][j] = num;
+                if (fillRemaining(i, j + 1))
+                    return true;
+
+                matrix_[i][j] = 0;
+            }
+        }
+        return false;
+    }
+
+    // Check if safe to put in cell
+    boolean CheckIfSafe(int i, int j, int num) {
+        return (isNumInRow(i, num) &&
+                isNumInCol(j, num) &&
+                isNumInBox(i - i % SRN_, j - j % SRN_, num));
+    }
+
+    // Check number is in row i
+    boolean isNumInRow(int i, int num) {
+        for (int j = 0; j < board_size_; j++)
+            if (matrix_[i][j] == num)
+                return false;
+        return true;
+    }
+
+    // Check number is in col i
+    boolean isNumInCol(int j, int num) {
+        for (int i = 0; i < board_size_; i++)
+            if (matrix_[i][j] == num)
+                return false;
+        return true;
+    }
+
+    // Remove the digits from "num_holes"
+    public void removeKDigits() {
+        int count = num_holes_;
+        while (count != 0) {
+            int cellId = randomGenerator(board_size_ * board_size_) - 1;
+
+            // Get coordinates i and j from ID
+            int i = (cellId / board_size_);
+            int j = cellId % board_size_;
+
+            if (matrix_[i][j] != 0) {
+                // Remove the digit
+                count--;
+                matrix_[i][j] = 0;
+            }
         }
     }
 
+    // Print sudoku
+    public void printSudoku() {
+        for (int i = 0; i < board_size_; i++) {
+            for (int j = 0; j < board_size_; j++)
+                System.out.print(matrix_[i][j] + " ");
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    // Return the sudoku
+    public int[][] getSudoku() {
+        return matrix_;
+    }
+
+    // Driver code
     public static void main(String[] args) {
-        SudokuRandomizer randomizer = new SudokuRandomizer();
-        print_matrix(randomizer.generateRandomSudoku());
+        int N = 9, K = 40;
+        SudokuRandomizer sudoku = new SudokuRandomizer(N, K);
+        sudoku.fillValues();
+        sudoku.printSudoku();
     }
 }
