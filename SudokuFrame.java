@@ -68,8 +68,6 @@ public class SudokuFrame extends JFrame {
         sudokuRandomizer.fillValues(50);
         sudokuRandomizer.printSudoku();
         int[][] sudoku = sudokuRandomizer.getSudoku();
-        // System.out.println("Number of solutions: " + sudokuRandomizer.getSolutionNum());
-        // System.out.println();
 
         // Sudoku solver driver
         SudokuSolver sudokuSolver = new SudokuSolver();

@@ -167,23 +167,26 @@ public class SudokuRandomizer {
     }
 
     private int getSolutionNumHelper(int i, int j, int[][] cells, int count) {
-        if (i == 9) {
+        if (i == board_size_) {
             i = 0;
-            if (++j == 9)
+            if (++j == board_size_)
                 return 1 + count;
         }
+
         if (cells[i][j] != 0) // Skip filled cells
             return getSolutionNumHelper(i + 1, j, cells, count);
+
         // Search for 2 solutions instead of 1
         // Break, if 2 solutions are found
-        for (int val = 1; val <= 9 && count <= 2; ++val) {
+        for (int val = 1; val <= board_size_ && count <= 2; ++val) {
             if (CheckIfSafe(i, j, val)) {
                 cells[i][j] = val;
-                // add additional solutions
+                // Add additional solutions
                 count = getSolutionNumHelper(i + 1, j, cells, count);
             }
         }
         cells[i][j] = 0; // Reset on backtrack
+
         return count;
     }
 
