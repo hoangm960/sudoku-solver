@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 public class SudokuFrame extends JFrame {
     private static int[][] unsolved_board_;
+    private static int[][] solved_board_;
 
     public SudokuFrame() {
         setTitle("Sudoku Generator Frame");
@@ -59,6 +60,13 @@ public class SudokuFrame extends JFrame {
             }
         });
 
+        giveUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                displayBoard.updateBoard(solved_board_);
+            }
+        });
+
         buttonPanel.add(newBoardButton);
         buttonPanel.add(submitButton);
         buttonPanel.add(giveUpButton);
@@ -81,6 +89,16 @@ public class SudokuFrame extends JFrame {
         sudokuRandomizer.fillValues(50);
         sudokuRandomizer.printSudoku();
         unsolved_board_ = sudokuRandomizer.getSudoku();
+        solved_board_ = new int[9][9];
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                solved_board_[i][j] = unsolved_board_[i][j];
+            }
+        }
+
+        SudokuSolver sudokuSolver = new SudokuSolver();
+        sudokuSolver.solve(solved_board_);
+        sudokuSolver.printSudoku(solved_board_);
     }
 
     public static void main(String[] args) {
@@ -89,11 +107,17 @@ public class SudokuFrame extends JFrame {
         sudokuRandomizer.fillValues(50);
         sudokuRandomizer.printSudoku();
         unsolved_board_ = sudokuRandomizer.getSudoku();
+        solved_board_ = new int[9][9];
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                solved_board_[i][j] = unsolved_board_[i][j];
+            }
+        }
 
-        // // Sudoku solver driver
-        // SudokuSolver sudokuSolver = new SudokuSolver();
-        // sudokuSolver.solve(sudoku);
-        // sudokuSolver.printSudoku(sudoku);
+        // Sudoku solver driver
+        SudokuSolver sudokuSolver = new SudokuSolver();
+        sudokuSolver.solve(solved_board_);
+        sudokuSolver.printSudoku(solved_board_);
 
         // Sudoku frame driver
         SwingUtilities.invokeLater(SudokuFrame::new);
