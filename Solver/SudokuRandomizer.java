@@ -1,4 +1,5 @@
 package Solver;
+
 public class SudokuRandomizer {
     int[] matrix_[];
     int board_size_; // number of columns/rows.
@@ -82,10 +83,10 @@ public class SudokuRandomizer {
         } else if (i < board_size_ - SRN_) {
             if (j == (int) (i / SRN_) * SRN_)
                 j = j + SRN_;
-            } else {
-                if (j == board_size_ - SRN_) {
-                    i = i + 1;
-                    j = 0;
+        } else {
+            if (j == board_size_ - SRN_) {
+                i = i + 1;
+                j = 0;
                 if (i >= board_size_)
                     return true;
             }
@@ -142,6 +143,33 @@ public class SudokuRandomizer {
                 matrix_[i][j] = 0;
             }
         }
+    }
+
+    // returns 0, 1 or more than 1 depending on whether 0, 1 or more than 1
+    // solutions are found
+    private int getSolutionNumHelper(int i, int j, int[][] cells, int count) {
+        if (i == 9) {
+            i = 0;
+            if (++j == 9)
+                return 1 + count;
+        }
+        if (cells[i][j] != 0) // skip filled cells
+            return getSolutionNumHelper(i + 1, j, cells, count);
+        // search for 2 solutions instead of 1
+        // break, if 2 solutions are found
+        for (int val = 1; val <= 9; ++val) {
+            if (CheckIfSafe(i, j, val)) {
+                cells[i][j] = val;
+                // add additional solutions
+                count = getSolutionNumHelper(i + 1, j, cells, count);
+            }
+        }
+        cells[i][j] = 0; // reset on backtrack
+        return count;
+    }
+
+    public int getSolutionNum() {
+        return getSolutionNumHelper(0, 0, matrix_, 0);
     }
 
     // Print sudoku

@@ -16,15 +16,14 @@ public class SudokuFrame extends JFrame {
         // holder panel: the parent of Board panel
         JPanel holder = new JPanel(new BorderLayout());
 
-
-        // empty panel: it has the same level as board panel - to shift the boardPanel down.
+        // empty panel: it has the same level as board panel - to shift the boardPanel
+        // down.
         JPanel emptyPanel = new JPanel();
         emptyPanel.setBackground(Color.blue);
         emptyPanel.setPreferredSize(new Dimension(10, 30));
         holder.add(emptyPanel, BorderLayout.NORTH);
 
-
-        //Board panel: contains the sudoku board class
+        // Board panel: contains the sudoku board class
         JPanel boardPanel = new JPanel();
         boardPanel.setBackground(Color.blue);
         boardPanel.setPreferredSize(new Dimension(600, 600));
@@ -35,7 +34,6 @@ public class SudokuFrame extends JFrame {
         SudokuBoard displayBoard = new SudokuBoard();
         // Add instance to the board panel
         boardPanel.add(displayBoard, BorderLayout.CENTER);
-
 
         // Buttons panel
         JPanel buttonPanel = new JPanel();
@@ -66,18 +64,19 @@ public class SudokuFrame extends JFrame {
 
     public static void main(String[] args) {
         // Sudoku generator driver
-        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 20);
+        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 50);
         sudokuRandomizer.fillValues();
         int[][] sudoku = sudokuRandomizer.getSudoku();
         sudokuRandomizer.printSudoku();
+        System.out.println("Number of solutions: " + sudokuRandomizer.getSolutionNum());
         System.out.println();
 
-        // Sudoku solver driver
-        SudokuSolver sudokuSolver = new SudokuSolver();
-        sudokuSolver.solve(sudoku);
-        sudokuSolver.printSudoku(sudoku);
+        // // Sudoku solver driver
+        // SudokuSolver sudokuSolver = new SudokuSolver();
+        // sudokuSolver.solve(sudoku);
+        // sudokuSolver.printSudoku(sudoku);
 
         // Sudoku frame driver
-        SwingUtilities.invokeLater(SudokuFrame::new);
+        // SwingUtilities.invokeLater(SudokuFrame::new);
     }
 }
