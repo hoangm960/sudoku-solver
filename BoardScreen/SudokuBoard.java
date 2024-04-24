@@ -16,7 +16,7 @@ public class SudokuBoard extends JPanel{
     public static int size = 9;
     private JTextField[][] cells;
     private int[][] sudoku;
-    
+
 
     public SudokuBoard(int[][] sudoku) {
         this.sudoku = sudoku;
@@ -50,7 +50,7 @@ public class SudokuBoard extends JPanel{
         }
     }
 
-    
+
     private class SudokuListener extends KeyAdapter {
         private int row, col;
 
@@ -105,14 +105,14 @@ public class SudokuBoard extends JPanel{
 
         private boolean isComputerGenerated (int row, int col) {
             return sudoku[row][col] != 0;
-        }        
+        }
     }
 
 
     public static void main(String[] args) {
         // Sudoku generator driver
         SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 20);
-        sudokuRandomizer.fillValues();
+        sudokuRandomizer.fillValues(10);
         int[][] sudoku = sudokuRandomizer.getSudoku();
         SwingUtilities.invokeLater(() -> new SudokuBoard(sudoku));
     }
