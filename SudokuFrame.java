@@ -61,6 +61,7 @@ public class SudokuFrame extends JFrame {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
+                //TODO: Display messages
                 if (checkSolution(displayBoard.getBoard()))
                     System.out.println("You win!");
                 else
