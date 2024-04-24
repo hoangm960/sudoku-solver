@@ -1,4 +1,7 @@
 import BoardScreen.SudokuBoard;
+import Solver.SudokuRandomizer;
+import Solver.SudokuSolver;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -10,29 +13,31 @@ public class SudokuFrame extends JFrame {
         setLayout(new BorderLayout());
         setSize(800, 820);
 
-        // holder panel: the parent of Board panel
+        // holder: the parent of Board panel
         JPanel holder = new JPanel(new BorderLayout());
 
 
-        // empty panel: it has the same level as board panel - to shift the boardPanel down.
+        // emptyPanel: it has the same level as board panel - to shift the boardPanel down.
         JPanel emptyPanel = new JPanel();
         emptyPanel.setBackground(Color.blue);
         emptyPanel.setPreferredSize(new Dimension(10, 30));
         holder.add(emptyPanel, BorderLayout.NORTH);
 
-        
-        //Board panel: contains the sudoku board class
+        // Board panel: contains the sudoku board class
         JPanel boardPanel = new JPanel();
         boardPanel.setBackground(Color.blue);
         boardPanel.setPreferredSize(new Dimension(600, 600));
         holder.add(boardPanel, BorderLayout.CENTER);
         add(holder, BorderLayout.CENTER);
 
-        // Create an instance of the to-display class
-        SudokuBoard displayBoard = new SudokuBoard();
+        // Create an instance of the randomizer class
+        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 20);
+        sudokuRandomizer.fillValues(10);
+        int[][] sudoku = sudokuRandomizer.getSudoku();
+        // Create an instance of the SudokuBoard class <- visualise the board with this class
+        SudokuBoard displayBoard = new SudokuBoard(sudoku);
         // Add instance to the board panel
         boardPanel.add(displayBoard, BorderLayout.CENTER);
-        
 
         // Buttons panel
         JPanel buttonPanel = new JPanel();
@@ -62,6 +67,18 @@ public class SudokuFrame extends JFrame {
     }
 
     public static void main(String[] args) {
+        // Sudoku generator driver
+        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 50);
+        sudokuRandomizer.fillValues(50);
+        sudokuRandomizer.printSudoku();
+        int[][] sudoku = sudokuRandomizer.getSudoku();
+
+        // Sudoku solver driver
+        SudokuSolver sudokuSolver = new SudokuSolver();
+        sudokuSolver.solve(sudoku);
+        sudokuSolver.printSudoku(sudoku);
+
+        // Sudoku frame driver
         SwingUtilities.invokeLater(SudokuFrame::new);
     }
 }

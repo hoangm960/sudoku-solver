@@ -1,6 +1,7 @@
-package Backend;
+package Solver;
+
 public class SudokuSolver {
-    public static int[] find_possible_values(int[][] matrix, int x, int y) {
+    public int[] find_possible_values(int[][] matrix, int x, int y) {
         int[] all_values = new int[9];
         for (int i = 0; i < 9; i++) {
             all_values[i] = 1;
@@ -29,7 +30,7 @@ public class SudokuSolver {
         return convert_possible_values(all_values);
     }
 
-    private static int[] convert_possible_values(int[] all_values) {
+    private int[] convert_possible_values(int[] all_values) {
         int i = 0;
         int[] possible_values = new int[9];
         for (int j = 0; j < 9; j++) {
@@ -41,7 +42,7 @@ public class SudokuSolver {
         return remove_trailing_zeros(possible_values);
     }
 
-    private static int[] remove_trailing_zeros(int[] possible_values) {
+    private int[] remove_trailing_zeros(int[] possible_values) {
         int i = 8;
         while (i >= 0 && possible_values[i] == 0) {
             i--;
@@ -53,7 +54,7 @@ public class SudokuSolver {
         return new_possible_values;
     }
 
-    public static void solve(int[][] matrix) {
+    public void solve(int[][] matrix) {
         if (isSolved(matrix)) {
             return;
         }
@@ -80,7 +81,7 @@ public class SudokuSolver {
         }
     }
 
-    private static boolean isSolved(int[][] matrix) {
+    private boolean isSolved(int[][] matrix) {
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
                 if (matrix[x][y] == 0) {
@@ -91,7 +92,7 @@ public class SudokuSolver {
         return true;
     }
 
-    public static void print_matrix(int[][] matrix) {
+    public void printSudoku(int[][] matrix) {
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
                 System.out.print(matrix[x][y] + " ");
@@ -101,56 +102,14 @@ public class SudokuSolver {
     }
 
     public static void main(String[] args) {
-        // int[][] matrix_1 = {
-        // { 0, 5, 0, 0, 0, 2, 0, 0, 6 },
-        // { 0, 8, 0, 0, 0, 6, 7, 0, 3 },
-        // { 0, 0, 0, 7, 4, 0, 0, 0, 8 },
-        // { 6, 7, 0, 9, 8, 0, 0, 0, 0 },
-        // { 0, 3, 1, 0, 5, 0, 6, 0, 9 },
-        // { 0, 0, 0, 0, 0, 3, 8, 2, 0 },
-        // { 0, 0, 0, 0, 0, 0, 1, 8, 0 },
-        // { 0, 0, 0, 3, 0, 0, 0, 0, 2 },
-        // { 9, 2, 0, 5, 0, 0, 0, 7, 0 }
-        // };
-        // Sudoku_hw4.find_possible_values(matrix_1, 0, 0); // returns [1, 3, 4, 7]
-        // Sudoku_hw4.find_possible_values(matrix_1, 3, 5); // returns [1, 4]
-        // Sudoku_hw4.find_possible_values(matrix_1, 6, 3); // returns [2, 4, 6]
-        // Sudoku_hw4.solve(matrix_1); // after this call, matrix_1 is the matrix below
-        // 1 5 7 8 3 2 4 9 6
-        // 2 8 4 1 9 6 7 5 3
-        // 3 9 6 7 4 5 2 1 8
-        // 6 7 2 9 8 4 5 3 1
-        // 8 3 1 2 5 7 6 4 9
-        // 5 4 9 6 1 3 8 2 7
-        // 7 6 3 4 2 9 1 8 5
-        // 4 1 5 3 7 8 9 6 2
-        // 9 2 8 5 6 1 3 7 4
-        //
-        // int[][] matrix_10 = {
-        //         { 5, 3, 0, 0, 8, 0, 0, 0, 0 },
-        //         { 0, 0, 0, 0, 0, 0, 0, 2, 0 },
-        //         { 0, 0, 6, 9, 0, 0, 5, 0, 7 },
-        //         { 0, 0, 7, 5, 0, 0, 4, 0, 9 },
-        //         { 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-        //         { 6, 0, 0, 0, 0, 7, 0, 0, 0 },
-        //         { 0, 0, 4, 0, 0, 0, 0, 1, 0 },
-        //         { 8, 0, 0, 0, 9, 0, 2, 0, 4 },
-        //         { 0, 0, 0, 2, 0, 0, 0, 6, 0 }
-        // };
-        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer();
-        int[][] sudoku = sudokuRandomizer.generateRandomSudoku();
-        print_matrix(sudoku);
+        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 20);
+        sudokuRandomizer.fillValues(10);
+        int[][] sudoku = sudokuRandomizer.getSudoku();
+        sudokuRandomizer.printSudoku();
         System.out.println();
-        SudokuSolver.solve(sudoku); // after this call, matrix_10 is the matrix below
-        print_matrix(sudoku);
-        // 5 3 2 7 8 4 1 9 6
-        // 7 4 9 1 5 6 8 2 3
-        // 1 8 6 9 2 3 5 4 7
-        // 3 1 7 5 6 2 4 8 9
-        // 4 2 5 8 3 9 6 7 1
-        // 6 9 8 4 1 7 3 5 2
-        // 2 6 4 3 7 8 9 1 5
-        // 8 7 1 6 9 5 2 3 4
-        // 9 5 3 2 4 1 7 6 8
+
+        SudokuSolver sudokuSolver = new SudokuSolver();
+        sudokuSolver.solve(sudoku);
+        sudokuSolver.printSudoku(sudoku);
     }
 }
