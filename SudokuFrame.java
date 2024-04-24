@@ -13,11 +13,11 @@ public class SudokuFrame extends JFrame {
         setLayout(new BorderLayout());
         setSize(800, 820);
 
-        // holder panel: the parent of Board panel
+        // holder: the parent of Board panel
         JPanel holder = new JPanel(new BorderLayout());
 
-        // empty panel: it has the same level as board panel - to shift the boardPanel
-        // down.
+
+        // emptyPanel: it has the same level as board panel - to shift the boardPanel down.
         JPanel emptyPanel = new JPanel();
         emptyPanel.setBackground(Color.blue);
         emptyPanel.setPreferredSize(new Dimension(10, 30));
@@ -30,8 +30,12 @@ public class SudokuFrame extends JFrame {
         holder.add(boardPanel, BorderLayout.CENTER);
         add(holder, BorderLayout.CENTER);
 
-        // Create an instance of the to-display class
-        SudokuBoard displayBoard = new SudokuBoard();
+        // Create an instance of the randomizer class
+        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 20);
+        sudokuRandomizer.fillValues(10);
+        int[][] sudoku = sudokuRandomizer.getSudoku();
+        // Create an instance of the SudokuBoard class <- visualise the board with this class
+        SudokuBoard displayBoard = new SudokuBoard(sudoku);
         // Add instance to the board panel
         boardPanel.add(displayBoard, BorderLayout.CENTER);
 
