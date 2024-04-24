@@ -103,7 +103,7 @@ public class SudokuSolver {
 
     public static void main(String[] args) {
         SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 20);
-        sudokuRandomizer.fillValues();
+        sudokuRandomizer.fillValues(10);
         int[][] sudoku = sudokuRandomizer.getSudoku();
         sudokuRandomizer.printSudoku();
         System.out.println();

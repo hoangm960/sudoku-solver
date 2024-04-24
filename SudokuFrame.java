@@ -65,18 +65,18 @@ public class SudokuFrame extends JFrame {
     public static void main(String[] args) {
         // Sudoku generator driver
         SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 50);
-        sudokuRandomizer.fillValues();
-        int[][] sudoku = sudokuRandomizer.getSudoku();
+        sudokuRandomizer.fillValues(50);
         sudokuRandomizer.printSudoku();
-        System.out.println("Number of solutions: " + sudokuRandomizer.getSolutionNum());
-        System.out.println();
+        int[][] sudoku = sudokuRandomizer.getSudoku();
+        // System.out.println("Number of solutions: " + sudokuRandomizer.getSolutionNum());
+        // System.out.println();
 
-        // // Sudoku solver driver
-        // SudokuSolver sudokuSolver = new SudokuSolver();
-        // sudokuSolver.solve(sudoku);
-        // sudokuSolver.printSudoku(sudoku);
+        // Sudoku solver driver
+        SudokuSolver sudokuSolver = new SudokuSolver();
+        sudokuSolver.solve(sudoku);
+        sudokuSolver.printSudoku(sudoku);
 
         // Sudoku frame driver
-        // SwingUtilities.invokeLater(SudokuFrame::new);
+        SwingUtilities.invokeLater(SudokuFrame::new);
     }
 }

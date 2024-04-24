@@ -2,9 +2,10 @@ package Solver;
 
 public class SudokuRandomizer {
     int[] matrix_[];
-    int board_size_; // number of columns/rows.
-    int SRN_; // square root of N
-    int num_holes_; // No. Of missing digits
+    int board_size_; // Number of columns/rows
+    int SRN_; // Square root of N
+    int num_holes_; // Number of missing digits
+    int reps; // Number of times to repeat the randomization
 
     public SudokuRandomizer(int board_size, int num_holes) {
         this.board_size_ = board_size;
@@ -15,25 +16,45 @@ public class SudokuRandomizer {
         matrix_ = new int[board_size][board_size];
     }
 
-    public void fillValues() {
-        // Fill the diagonal of SRN x SRN matrices
-        fillDiagonal();
+    public void fillValues(int max_tries) {
+        while (reps < max_tries && getSolutionNum() != 1) {
+            // Reset the board
+            resetSudoku();
 
-        // Fill remaining blocks
-        fillRemaining(0, SRN_);
+            // Fill the diagonal of SRN x SRN matrices
+            fillDiagonal();
 
-        // Remove Randomly K digits to make game
-        removeKDigits();
+            // Fill remaining blocks
+            fillRemaining(0, SRN_);
+
+            // Remove randomly "num_holes_" digits
+            removeKDigits();
+
+            reps++;
+        }
+        if (reps == max_tries) {
+            System.out.println("Could not find a solution after " + max_tries + " tries.");
+        } else {
+            System.out.println("Number of tries: " + reps);
+        }
+    }
+
+    private void resetSudoku() {
+        for (int i = 0; i < board_size_; i++) {
+            for (int j = 0; j < board_size_; j++) {
+                matrix_[i][j] = 0;
+            }
+        }
     }
 
     // Fill the diagonal SRN x SRN matrixes
-    void fillDiagonal() {
+    private void fillDiagonal() {
         for (int i = 0; i < board_size_; i = i + SRN_)
             fillBox(i, i);
     }
 
     // Fill a 3 x 3 matrix.
-    void fillBox(int row, int col) {
+    private void fillBox(int row, int col) {
         int num;
         for (int i = 0; i < SRN_; i++) {
             for (int j = 0; j < SRN_; j++) {
@@ -47,12 +68,12 @@ public class SudokuRandomizer {
     }
 
     // Random generator
-    int randomGenerator(int num) {
+    private int randomGenerator(int num) {
         return (int) Math.floor((Math.random() * num + 1));
     }
 
     // Returns false if given 3 x 3 block contains num.
-    boolean isNumInBox(int rowStart, int colStart, int num) {
+    private boolean isNumInBox(int rowStart, int colStart, int num) {
         for (int i = 0; i < SRN_; i++)
             for (int j = 0; j < SRN_; j++)
                 if (matrix_[rowStart + i][colStart + j] == num)
@@ -62,7 +83,7 @@ public class SudokuRandomizer {
     }
 
     // A recursive function to fill remaining matrix
-    boolean fillRemaining(int i, int j) {
+    private boolean fillRemaining(int i, int j) {
         // j reach to the end of the row
         if (j >= board_size_) {
             // Move to next row
@@ -105,14 +126,14 @@ public class SudokuRandomizer {
     }
 
     // Check if safe to put in cell
-    boolean CheckIfSafe(int i, int j, int num) {
+    private boolean CheckIfSafe(int i, int j, int num) {
         return (isNumInRow(i, num) &&
                 isNumInCol(j, num) &&
                 isNumInBox(i - i % SRN_, j - j % SRN_, num));
     }
 
     // Check number is in row i
-    boolean isNumInRow(int i, int num) {
+    private boolean isNumInRow(int i, int num) {
         for (int j = 0; j < board_size_; j++)
             if (matrix_[i][j] == num)
                 return false;
@@ -120,7 +141,7 @@ public class SudokuRandomizer {
     }
 
     // Check number is in col i
-    boolean isNumInCol(int j, int num) {
+    private boolean isNumInCol(int j, int num) {
         for (int i = 0; i < board_size_; i++)
             if (matrix_[i][j] == num)
                 return false;
@@ -145,26 +166,24 @@ public class SudokuRandomizer {
         }
     }
 
-    // returns 0, 1 or more than 1 depending on whether 0, 1 or more than 1
-    // solutions are found
     private int getSolutionNumHelper(int i, int j, int[][] cells, int count) {
         if (i == 9) {
             i = 0;
             if (++j == 9)
                 return 1 + count;
         }
-        if (cells[i][j] != 0) // skip filled cells
+        if (cells[i][j] != 0) // Skip filled cells
             return getSolutionNumHelper(i + 1, j, cells, count);
-        // search for 2 solutions instead of 1
-        // break, if 2 solutions are found
-        for (int val = 1; val <= 9; ++val) {
+        // Search for 2 solutions instead of 1
+        // Break, if 2 solutions are found
+        for (int val = 1; val <= 9 && count <= 2; ++val) {
             if (CheckIfSafe(i, j, val)) {
                 cells[i][j] = val;
                 // add additional solutions
                 count = getSolutionNumHelper(i + 1, j, cells, count);
             }
         }
-        cells[i][j] = 0; // reset on backtrack
+        cells[i][j] = 0; // Reset on backtrack
         return count;
     }
 
@@ -191,7 +210,7 @@ public class SudokuRandomizer {
     public static void main(String[] args) {
         int N = 9, K = 40;
         SudokuRandomizer sudoku = new SudokuRandomizer(N, K);
-        sudoku.fillValues();
+        sudoku.fillValues(10);
         sudoku.printSudoku();
     }
 }
