@@ -4,8 +4,11 @@ import Solver.SudokuSolver;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class SudokuFrame extends JFrame {
+    private static int[][] unsolved_board_;
+
     public SudokuFrame() {
         setTitle("Sudoku Generator Frame");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -16,8 +19,8 @@ public class SudokuFrame extends JFrame {
         // holder: the parent of Board panel
         JPanel holder = new JPanel(new BorderLayout());
 
-
-        // emptyPanel: it has the same level as board panel - to shift the boardPanel down.
+        // emptyPanel: it has the same level as board panel - to shift the boardPanel
+        // down.
         JPanel emptyPanel = new JPanel();
         emptyPanel.setBackground(Color.blue);
         emptyPanel.setPreferredSize(new Dimension(10, 30));
@@ -30,12 +33,9 @@ public class SudokuFrame extends JFrame {
         holder.add(boardPanel, BorderLayout.CENTER);
         add(holder, BorderLayout.CENTER);
 
-        // Create an instance of the randomizer class
-        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 20);
-        sudokuRandomizer.fillValues(10);
-        int[][] sudoku = sudokuRandomizer.getSudoku();
-        // Create an instance of the SudokuBoard class <- visualise the board with this class
-        SudokuBoard displayBoard = new SudokuBoard(sudoku);
+        // Create an instance of the SudokuBoard class <- visualise the board with this
+        // class
+        SudokuBoard displayBoard = new SudokuBoard(unsolved_board_);
         // Add instance to the board panel
         boardPanel.add(displayBoard, BorderLayout.CENTER);
 
@@ -46,8 +46,18 @@ public class SudokuFrame extends JFrame {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
         JButton newBoardButton = createButton("New Board", 150, 60);
+        // TODO: Add check solution function
         JButton submitButton = createButton("Submit", 150, 60);
+        // TODO: Add display solution function
         JButton giveUpButton = createButton("Give Up!", 150, 60);
+
+        newBoardButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                renewBoard();
+                displayBoard.updateBoard(unsolved_board_);
+            }
+        });
 
         buttonPanel.add(newBoardButton);
         buttonPanel.add(submitButton);
@@ -66,17 +76,24 @@ public class SudokuFrame extends JFrame {
         return button;
     }
 
-    public static void main(String[] args) {
-        // Sudoku generator driver
-        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 50);
+    private static void renewBoard() {
+        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 30);
         sudokuRandomizer.fillValues(50);
         sudokuRandomizer.printSudoku();
-        int[][] sudoku = sudokuRandomizer.getSudoku();
+        unsolved_board_ = sudokuRandomizer.getSudoku();
+    }
 
-        // Sudoku solver driver
-        SudokuSolver sudokuSolver = new SudokuSolver();
-        sudokuSolver.solve(sudoku);
-        sudokuSolver.printSudoku(sudoku);
+    public static void main(String[] args) {
+        // Sudoku generator driver
+        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 30);
+        sudokuRandomizer.fillValues(50);
+        sudokuRandomizer.printSudoku();
+        unsolved_board_ = sudokuRandomizer.getSudoku();
+
+        // // Sudoku solver driver
+        // SudokuSolver sudokuSolver = new SudokuSolver();
+        // sudokuSolver.solve(sudoku);
+        // sudokuSolver.printSudoku(sudoku);
 
         // Sudoku frame driver
         SwingUtilities.invokeLater(SudokuFrame::new);

@@ -15,11 +15,11 @@ import javax.swing.SwingUtilities;
 public class SudokuBoard extends JPanel{
     public static int size = 9;
     private JTextField[][] cells;
-    private int[][] sudoku;
+    private int[][] board_;
 
 
     public SudokuBoard(int[][] sudoku) {
-        this.sudoku = sudoku;
+        this.board_ = sudoku;
         buildBoard();
     }
 
@@ -37,16 +37,24 @@ public class SudokuBoard extends JPanel{
                 cell.setFont(new Font("Arial", 1, 30));
                 cell.addKeyListener(new SudokuListener(row, col));
                 cells[row][col] = cell;
-                if (sudoku[row][col] != 0 ) {
-                    cells[row][col].setText(Integer.toString(sudoku[row][col]));
-                    cell.setForeground(Color.GRAY);
-                    cell.setEditable(false);
-                }
+                fillCell(row, col);
                 add(cell);
             }
 
             //TODO: Decorate the board here
 
+        }
+    }
+
+    private void fillCell(int row, int col) {
+        if (board_[row][col] != 0 ) {
+            cells[row][col].setText(Integer.toString(board_[row][col]));
+            cells[row][col].setForeground(Color.GRAY);
+            cells[row][col].setEditable(false);
+        } else {
+            cells[row][col].setText("");
+            cells[row][col].setForeground(Color.BLACK);
+            cells[row][col].setEditable(true);
         }
     }
 
@@ -104,7 +112,21 @@ public class SudokuBoard extends JPanel{
         }
 
         private boolean isComputerGenerated (int row, int col) {
-            return sudoku[row][col] != 0;
+            return board_[row][col] != 0;
+        }
+    }
+
+    public void updateBoard(int[][] board) {
+        for (int row = 0; row < cells.length; row++) {
+            for (int col = 0; col < cells.length; col++) {
+                board_[row][col] = board[row][col];
+            }
+        }
+
+        for (int row = 0; row < cells.length; row++) {
+            for (int col = 0; col < cells.length; col++) {
+                fillCell(row, col);
+            }
         }
     }
 
