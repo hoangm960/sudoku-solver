@@ -47,16 +47,24 @@ public class SudokuFrame extends JFrame {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
         JButton newBoardButton = createButton("New Board", 150, 60);
-        // TODO: Add check solution function
         JButton submitButton = createButton("Submit", 150, 60);
-        // TODO: Add display solution function
         JButton giveUpButton = createButton("Give Up!", 150, 60);
 
         newBoardButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
-                renewBoard();
+                renewBoard(9, 30, 10);
                 displayBoard.updateBoard(unsolved_board_);
+            }
+        });
+
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                if (checkSolution(displayBoard.getBoard()))
+                    System.out.println("You win!");
+                else
+                    System.out.println("You are wrong! Try again!");
             }
         });
 
@@ -84,9 +92,9 @@ public class SudokuFrame extends JFrame {
         return button;
     }
 
-    private static void renewBoard() {
-        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 30);
-        sudokuRandomizer.fillValues(50);
+    private static void renewBoard(int board_size, int num_holes, int max_tries) {
+        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(board_size, num_holes);
+        sudokuRandomizer.fillValues(max_tries);
         sudokuRandomizer.printSudoku();
         unsolved_board_ = sudokuRandomizer.getSudoku();
         solved_board_ = new int[9][9];
@@ -101,23 +109,19 @@ public class SudokuFrame extends JFrame {
         sudokuSolver.printSudoku(solved_board_);
     }
 
-    public static void main(String[] args) {
-        // Sudoku generator driver
-        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(9, 30);
-        sudokuRandomizer.fillValues(50);
-        sudokuRandomizer.printSudoku();
-        unsolved_board_ = sudokuRandomizer.getSudoku();
-        solved_board_ = new int[9][9];
+    private boolean checkSolution(int[][] current_board) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                solved_board_[i][j] = unsolved_board_[i][j];
+                if (current_board[i][j] != solved_board_[i][j]) {
+                    return false;
+                }
             }
         }
+        return true;
+    }
 
-        // Sudoku solver driver
-        SudokuSolver sudokuSolver = new SudokuSolver();
-        sudokuSolver.solve(solved_board_);
-        sudokuSolver.printSudoku(solved_board_);
+    public static void main(String[] args) {
+        renewBoard(9, 3, 10);
 
         // Sudoku frame driver
         SwingUtilities.invokeLater(SudokuFrame::new);
