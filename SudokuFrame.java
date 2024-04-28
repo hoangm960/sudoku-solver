@@ -6,6 +6,62 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+class Difficulty {
+    public int board_size;
+    public int[] hole_range;
+    public int max_tries;
+
+    public Difficulty(int board_size, int[] hole_range, int max_tries) {
+        this.board_size = board_size;
+        this.hole_range = hole_range;
+        this.max_tries = max_tries;
+    }
+}
+
+class Map {
+    private String[] _key_set;
+    private Difficulty[] _value_arr;
+    private int _size;
+
+    public Map(int max_size) {
+        this._key_set = new String[max_size];
+
+        this._value_arr = new Difficulty[max_size];
+        this._size = 0;
+    }
+
+    public void put(String key, Difficulty value) {
+        if (!containsKey(key)) {
+            _key_set[_size] = key;
+            _value_arr[_size] = value;
+            _size++;
+        } else {
+            update(key, value);
+        }
+    }
+
+    public Difficulty get(String key) {
+        for (int i = 0; i < _size; i++) {
+            if (_key_set[i].equals(key)) {
+                return _value_arr[i];
+            }
+        }
+        return null;
+    }
+
+    public boolean containsKey(String key) {
+        return get(key) != null;
+    }
+
+    public void update(String key, Difficulty value) {
+        for (int i = 0; i < _size; i++) {
+            if (_key_set[i].equals(key)) {
+                _value_arr[i] = value;
+            }
+        }
+    }
+}
+
 public class SudokuFrame extends JFrame {
     private static int[][] unsolved_board_;
     private static int[][] solved_board_;
@@ -55,7 +111,7 @@ public class SudokuFrame extends JFrame {
         newBoardButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
-                renewBoard(9, 30, 10);
+                renewBoard(difficulty_);
                 displayBoard.updateBoard(unsolved_board_);
             }
         });
@@ -64,7 +120,7 @@ public class SudokuFrame extends JFrame {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 saveCurrentBoard(displayBoard.getBoard());
-                //TODO: Display messages
+                // TODO: Display messages
                 if (checkSolution(displayBoard.getBoard()))
                     // System.out.println("You win!");
                     JOptionPane.showMessageDialog(null, "bạn thật vjp pro, be my lỏd :D");
@@ -89,6 +145,18 @@ public class SudokuFrame extends JFrame {
         setVisible(true);
     }
 
+    private static void fillDifficulties(int max_tries) {
+        String[] difficultyTypes = { "easy", "medium", "hard" };
+        for (int i = 30; i <= 50; i += 10) {
+            difficulties.put(
+                    difficultyTypes[i % 3],
+                    new Difficulty(
+                            9,
+                            new int[] { i, i + 10 },
+                            max_tries));
+        }
+    }
+
     private JButton createButton(String text, int width, int height) {
         JButton button = new JButton(text);
         button.setPreferredSize(new Dimension(width, height));
@@ -98,9 +166,22 @@ public class SudokuFrame extends JFrame {
         return button;
     }
 
-    private static void renewBoard(int board_size, int num_holes, int max_tries) {
-        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(board_size, num_holes);
-        sudokuRandomizer.fillValues(max_tries);
+    private static void renewBoard(String difficulty) {
+        Difficulty difficultyValues = difficulties.get(difficulty);
+        SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(
+                difficultyValues.board_size,
+                (int) Math.floor(Math.random()
+                        * (difficultyValues.hole_range[1] - difficultyValues.hole_range[0])
+                        + difficultyValues.hole_range[0]));
+        boolean success = sudokuRandomizer.fillValues(difficultyValues.max_tries);
+        while (!success) {
+            sudokuRandomizer = new SudokuRandomizer(
+                    difficultyValues.board_size,
+                    (int) Math.floor(Math.random()
+                            * (difficultyValues.hole_range[1] - difficultyValues.hole_range[0])
+                            + difficultyValues.hole_range[0]));
+            success = sudokuRandomizer.fillValues(difficultyValues.max_tries);
+        }
         sudokuRandomizer.printSudoku();
         unsolved_board_ = sudokuRandomizer.getSudoku();
         solved_board_ = new int[9][9];
@@ -136,7 +217,8 @@ public class SudokuFrame extends JFrame {
     }
 
     public static void main(String[] args) {
-        renewBoard(9, 3, 10);
+        fillDifficulties(200);
+        renewBoard(difficulty_);
 
         // Sudoku frame driver
         SwingUtilities.invokeLater(SudokuFrame::new);
