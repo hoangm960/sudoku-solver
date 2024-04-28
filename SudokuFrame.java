@@ -65,8 +65,10 @@ class Map {
 public class SudokuFrame extends JFrame {
     private static int[][] unsolved_board_;
     private static int[][] solved_board_;
-
     private int[][] current_board_;
+    private static Map difficulties = new Map(3);
+    //TODO: change this variable after difficulty chosen
+    private static String difficulty_ = "hard";
 
     public SudokuFrame() {
         setTitle("Sudoku Generator Frame");
