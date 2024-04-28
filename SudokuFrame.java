@@ -10,6 +10,8 @@ public class SudokuFrame extends JFrame {
     private static int[][] unsolved_board_;
     private static int[][] solved_board_;
 
+    private int[][] current_board_;
+
     public SudokuFrame() {
         setTitle("Sudoku Generator Frame");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -61,11 +63,14 @@ public class SudokuFrame extends JFrame {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
+                saveCurrentBoard(displayBoard.getBoard());
                 //TODO: Display messages
                 if (checkSolution(displayBoard.getBoard()))
-                    System.out.println("You win!");
+                    // System.out.println("You win!");
+                    JOptionPane.showMessageDialog(null, "bạn thật vjp pro, be my lỏd :D");
                 else
-                    System.out.println("You are wrong! Try again!");
+                    // System.out.println("You are wrong! Try again!");
+                    JOptionPane.showMessageDialog(null, "đồ ngu ahihi, chúc bạn may mắn lần sau :p");
             }
         });
 
@@ -119,6 +124,15 @@ public class SudokuFrame extends JFrame {
             }
         }
         return true;
+    }
+
+    private void saveCurrentBoard(int[][] board) {
+        current_board_ = new int[9][9];
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                current_board_[i][j] = board[i][j];
+            }
+        }
     }
 
     public static void main(String[] args) {
