@@ -16,7 +16,7 @@ public class SudokuRandomizer {
         matrix_ = new int[board_size][board_size];
     }
 
-    public void fillValues(int max_tries) {
+    public boolean fillValues(int max_tries) {
         while (reps < max_tries && getSolutionNum() != 1) {
             // Reset the board
             resetSudoku();
@@ -34,8 +34,10 @@ public class SudokuRandomizer {
         }
         if (reps == max_tries) {
             System.out.println("Could not find a solution after " + max_tries + " tries.");
+            return false;
         } else {
             System.out.println("Number of tries: " + reps);
+            return true;
         }
     }
 
