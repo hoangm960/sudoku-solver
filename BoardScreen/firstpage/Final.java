@@ -1,9 +1,12 @@
+package BoardScreen;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
+// Lena added this line
+// import SudokuFrame;
 
 public class Final extends JFrame {
 
@@ -67,7 +70,12 @@ public class Final extends JFrame {
         // action cho button3: Hard
         button3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "kho qua bo qua TvT");
+                // JOptionPane.showMessageDialog(null, "kho qua bo qua TvT")
+
+                // Lena changed the actionlistener of this button
+                setVisible(false);
+                SudokuFrame sudokuFrame = new SudokuFrame();
+                sudokuFrame.setVisible(true);
             }
         });
 
@@ -92,5 +100,7 @@ public class Final extends JFrame {
 
     public static void main(String[] args) {
         Final frame = new Final();
+        SudokuFrame frame = new SudokuFrame();
+        frame.setVisible(true);
     }
 }
