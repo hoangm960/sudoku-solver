@@ -67,7 +67,7 @@ public class SudokuFrame extends JFrame {
     private static int[][] solved_board_;
     private static Map difficulties = new Map(3);
     //TODO: change this variable after difficulty chosen
-    private static String difficulty_ = "hard";
+    private static String difficulty_ = "easy";
 
     public SudokuFrame() {
         setTitle("Sudoku Generator Frame");
@@ -105,15 +105,41 @@ public class SudokuFrame extends JFrame {
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 75, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
-        JButton newBoardButton = createButton("New Board", 150, 60);
+        JButton newChooseLevel = createButton("Choose Level", 150, 60);
         JButton submitButton = createButton("Submit", 150, 60);
         JButton giveUpButton = createButton("Give Up!", 150, 60);
 
-        newBoardButton.addActionListener(new ActionListener() {
+        newChooseLevel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
-                renewBoard(difficulty_);
-                displayBoard.updateBoard(unsolved_board_);
+                String[] options = {"Easy", "Medium", "Hard"};
+                int choice = JOptionPane.showOptionDialog(
+                        null,
+                        "Select level:",
+                        "Difficulty Level",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        options,
+                        options[0]);
+
+                // Handle the user's choice
+                if (choice >= 0) {
+                    switch (choice) {
+                        case 0: // Easy
+                            difficulty_ = "easy";
+                            break;
+                        case 1: // Medium
+                            difficulty_ = "medium";
+                            break;
+                        case 2: // Hard
+                            difficulty_ = "hard";
+                            break;
+                    }
+                    // Renew the board with the selected difficulty level
+                    renewBoard(difficulty_);
+                    displayBoard.updateBoard(unsolved_board_);
+                }
             }
         });
 
@@ -137,7 +163,7 @@ public class SudokuFrame extends JFrame {
             }
         });
 
-        buttonPanel.add(newBoardButton);
+        buttonPanel.add(newChooseLevel);
         buttonPanel.add(submitButton);
         buttonPanel.add(giveUpButton);
 
