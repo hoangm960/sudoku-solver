@@ -67,7 +67,7 @@ public class SudokuFrame extends JFrame {
     private static int[][] solved_board_;
     private static Map difficulties = new Map(3);
     //TODO: change this variable after difficulty chosen
-    private static String difficulty_ = "easy";
+    private static String difficulty_ = "easy"; // default
 
     public SudokuFrame() {
         setTitle("Sudoku Generator Frame");
@@ -95,7 +95,9 @@ public class SudokuFrame extends JFrame {
 
         // Create an instance of the SudokuBoard class <- visualise the board with this
         // class
-        SudokuBoard displayBoard = new SudokuBoard(unsolved_board_);
+        // SudokuBoard displayBoard = new SudokuBoard(unsolved_board_);
+        SudokuBoard displayBoard = new SudokuBoard(new int[9][9]);
+
         // Add instance to the board panel
         boardPanel.add(displayBoard, BorderLayout.CENTER);
 
