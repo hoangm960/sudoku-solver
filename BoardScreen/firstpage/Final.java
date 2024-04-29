@@ -1,4 +1,4 @@
-package BoardScreen;
+package BoardScreen.firstpage;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -71,11 +71,11 @@ public class Final extends JFrame {
         button3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // JOptionPane.showMessageDialog(null, "kho qua bo qua TvT")
-
+                
                 // Lena changed the actionlistener of this button
-                setVisible(false);
+                /* setVisible(false);
                 SudokuFrame sudokuFrame = new SudokuFrame();
-                sudokuFrame.setVisible(true);
+                sudokuFrame.setVisible(true);*/
             }
         });
 
@@ -100,7 +100,7 @@ public class Final extends JFrame {
 
     public static void main(String[] args) {
         Final frame = new Final();
-        SudokuFrame frame = new SudokuFrame();
-        frame.setVisible(true);
+        /*SudokuFrame framemain = new SudokuFrame();
+        framemain.setVisible(true);*/
     }
 }
