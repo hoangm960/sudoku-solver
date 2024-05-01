@@ -66,7 +66,6 @@ public class SudokuFrame extends JFrame {
     private static int[][] unsolved_board_;
     private static int[][] solved_board_;
     private static Map difficulties = new Map(3);
-    //TODO: change this variable after difficulty chosen
     private static String difficulty_ = "easy"; // default
 
     public SudokuFrame() {
@@ -93,7 +92,7 @@ public class SudokuFrame extends JFrame {
         holder.add(boardPanel, BorderLayout.CENTER);
         add(holder, BorderLayout.CENTER);
 
-        // Create an instance of the SudokuBoard class <- visualise the board with this
+        // Create an instance of the SudokuBoard class <- visualize the board with this
         // class
         // SudokuBoard displayBoard = new SudokuBoard(unsolved_board_);
         SudokuBoard displayBoard = new SudokuBoard(new int[9][9]);
@@ -148,7 +147,6 @@ public class SudokuFrame extends JFrame {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
-                // TODO: Display messages
                 if (checkSolution(displayBoard.getBoard()))
                     // System.out.println("You win!");
                     JOptionPane.showMessageDialog(null, "bạn thật vjp pro, be my lỏd :D");
