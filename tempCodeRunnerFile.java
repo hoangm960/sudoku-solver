@@ -1,8 +1,6 @@
 import BoardScreen.SudokuBoard;
 import Solver.SudokuRandomizer;
 import Solver.SudokuSolver;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowAdapter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -171,9 +169,10 @@ public class SudokuFrame extends JFrame {
 
         add(buttonPanel, BorderLayout.SOUTH);
         setVisible(true);
-
-        // Handle window closing event
+        
+        // Add a WindowListener to handle window closing event
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
                 // Exit the application when the window is closed
                 System.exit(0);
