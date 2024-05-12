@@ -5,6 +5,7 @@ import Solver.SudokuSolver;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import BoardScreen.firstpage.*;
 
 class Difficulty {
     public int board_size;
@@ -152,7 +153,9 @@ public class SudokuFrame extends JFrame {
                     JOptionPane.showMessageDialog(null, "bạn thật vjp pro, be my lỏd :D");
                 else
                     // System.out.println("You are wrong! Try again!");
-                    JOptionPane.showMessageDialog(null, "đồ ngu ahihi, chúc bạn may mắn lần sau :p");
+                    // JOptionPane.showMessageDialog(null, "đồ ngu ahihi, chúc bạn may mắn lần sau :p");
+                    // setVisible(false);
+                    navigateToBoard();
             }
         });
 
@@ -169,6 +172,13 @@ public class SudokuFrame extends JFrame {
 
         add(buttonPanel, BorderLayout.SOUTH);
         setVisible(true);
+    }
+
+    // navigateToBoard function jesus christ
+    private int navigateToBoard() {
+        Final hehe = new Final();
+        hehe.setVisible(true);
+        return 1;
     }
 
     private static void fillDifficulties(int max_tries) {
@@ -239,5 +249,7 @@ public class SudokuFrame extends JFrame {
 
         // Sudoku frame driver
         SwingUtilities.invokeLater(SudokuFrame::new);
+        
+
     }
 }
