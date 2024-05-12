@@ -8,13 +8,16 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.*;
+import java.net.URL;
+
 import javax.sound.sampled.*;
 
 import Controller.Controller;
 
 public class HomeScreen extends JFrame {
-    // private boolean is_musicPlaying = false;
-    // private JButton volume_button;
+    private boolean is_musicPlaying = true;
+    private JButton volume_button;
+    private Clip clip_;
 
     public HomeScreen(Controller controller) {
         setTitle("Sudoku_CS2-Spring2024");
@@ -24,7 +27,7 @@ public class HomeScreen extends JFrame {
         setLocationRelativeTo(null);
 
         // Set the icon logo
-        ImageIcon image = new ImageIcon(this.getClass().getResource("assets\\Sudoku_logo.png"));
+        ImageIcon image = new ImageIcon(this.getClass().getResource("assets/Sudoku_logo.png"));
         setIconImage(image.getImage());
 
         // Set label "CS2_Spring 2024"
@@ -45,7 +48,7 @@ public class HomeScreen extends JFrame {
         add(gradientPanel, BorderLayout.CENTER);
 
         // Play background music
-        // playBackgroundMusic(this.getClass().getResource("assets\\background_music.wav"));
+        playBackgroundMusic(this.getClass().getResource("assets/background_music.wav"));
 
         // Create a button
         // button PlayGame
@@ -104,48 +107,46 @@ public class HomeScreen extends JFrame {
         gradientPanel.add(credit_button); // Add button to the gradient panel
 
         // create a button to adjust the volume
-        // JButton volume_button = new JButton("VOLUME: ON");
-        // volume_button.setBackground(new Color(0xe4e0e7));
-        // volume_button.setFont(new Font("Garamond", Font.BOLD, 30));
-        // volume_button.setForeground(Color.BLACK);
-        // volume_button.setPreferredSize(new Dimension(200, 50));
+        volume_button = new JButton("BACKGROUND MUSIC: ON");
+        volume_button.setBackground(new Color(0xe4e0e7));
+        volume_button.setFont(new Font("Garamond", Font.BOLD, 30));
+        volume_button.setForeground(Color.BLACK);
+        volume_button.setPreferredSize(new Dimension(200, 50));
 
-        // volume_button.addActionListener(new ActionListener() {
-        // public void actionPerformed(ActionEvent e) {
-        // on_volume();
-        // }
-        // });
+        volume_button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                on_volume();
+            }
+        });
 
-        // gradientPanel.setLayout(null);
-        // volume_button.setBounds(280, 550, 250, 50);
-        // gradientPanel.add(volume_button);
+        gradientPanel.setLayout(null);
+        volume_button.setBounds(280, 550, 250, 50);
+        gradientPanel.add(volume_button);
     }
 
     // Function to toggle background music
-    // private void on_volume() {
-    // if (is_musicPlaying) {
-    // off_volume(); // Nếu nhạc đang chạy, tắt nó
-    // volume_button.setText("VOLUME: OFF"); // Thay đổi văn bản của nút thành
-    // "Volume: Off"
-    // } else {
-    // playBackgroundMusic("C:\\Users\\hoang\\Downloads\\Soduku\\background_music.wav");
-    // // Nếu nhạc đang tắt, bật nó
-    // volume_button.setText("VOLUME: ON"); // Thay đổi văn bản của nút thành
-    // "Volume: On"
-    // }
-    // is_musicPlaying = !is_musicPlaying; // Đảo ngược trạng thái của biến cờ
-    // }
+    private void on_volume() {
+        if (is_musicPlaying) {
+            off_volume(); // Nếu nhạc đang chạy, tắt nó
+            volume_button.setText("BACKGROUND MUSIC: OFF"); // Thay đổi văn bản của nút thành "Volume: Off"
+        } else {
+            playBackgroundMusic(this.getClass().getResource("assets/background_music.wav"));
+            // Nếu nhạc đang tắt, bật nó
+            volume_button.setText("BACKGROUND MUSIC: ON"); // Thay đổi văn bản của nút thành "Volume: On"
+        }
+        is_musicPlaying = !is_musicPlaying; // Đảo ngược trạng thái của biến cờ
+    }
 
-    // private void off_volume() {
-    // try {
-    // if (clip != null && clip.isOpen()) {
-    // clip.stop(); // Dừng phát nhạc
-    // clip.close(); // Đóng Clip
-    // }
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // }
-    // }
+    private void off_volume() {
+        try {
+            if (clip_ != null && clip_.isOpen()) {
+                clip_.stop(); // Dừng phát nhạc
+                clip_.close(); // Đóng Clip
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void open_Guideline() {
         // Create a new tab with credits
@@ -225,21 +226,21 @@ public class HomeScreen extends JFrame {
     }
 
     // Music function
-    public void playBackgroundMusic(String filename) {
+    public void playBackgroundMusic(URL url) {
         try {
-            File audioFile = new File(filename);
+            File audioFile = new File(url.getFile().replace("%20", " "));
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
 
             AudioFormat format = audioStream.getFormat();
             DataLine.Info info = new DataLine.Info(Clip.class, format);
-            Clip clip = (Clip) AudioSystem.getLine(info);
+            clip_ = (Clip) AudioSystem.getLine(info);
 
-            clip.open(audioStream);
-            clip.loop(0);
-            // clip.loop(Clip.LOOP_CONTINUOUSLY);
+            clip_.open(audioStream);
+            // clip.loop(0);
+            clip_.loop(Clip.LOOP_CONTINUOUSLY);
 
             // Start playing
-            clip.start();
+            clip_.start();
 
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             e.printStackTrace();
