@@ -11,6 +11,9 @@ import GameScreen.helper.DifficultyMap;
 import java.awt.*;
 import java.awt.event.*;
 import Controller.Controller;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowAdapter;
+
 
 public class SudokuFrame extends JFrame {
     private Timer timer;
@@ -145,6 +148,7 @@ public class SudokuFrame extends JFrame {
                     }
                     difficulty_level = true;
                     // Renew the board with the selected difficulty level
+                    fillDifficulties(200);
                     renewBoard(difficulty_);
                     displayBoard.updateBoard(unsolved_board_);
                     timer.start();
@@ -226,6 +230,13 @@ public class SudokuFrame extends JFrame {
 
         setVisible(true);
 
+        // Handle window closing event
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                // Exit the application when the window is closed
+                System.exit(0);
+            }
+        });
     }
 
     private static void fillDifficulties(int max_tries) {
@@ -252,6 +263,8 @@ public class SudokuFrame extends JFrame {
 
     private static void renewBoard(String difficulty) {
         Difficulty difficultyValues = difficulties.get(difficulty);
+        System.out.println(difficulty);
+        System.out.println(difficultyValues.board_size);
         SudokuRandomizer sudokuRandomizer = new SudokuRandomizer(
                 difficultyValues.board_size,
                 (int) Math.floor(Math.random()
