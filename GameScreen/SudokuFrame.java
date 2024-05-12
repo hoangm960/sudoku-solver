@@ -1,87 +1,27 @@
-import BoardScreen.SudokuBoard;
+package GameScreen;
+
 import Solver.SudokuRandomizer;
 import Solver.SudokuSolver;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
+
+import GameScreen.helper.Difficulty;
+import GameScreen.helper.DifficultyMap;
+
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
-
-class Difficulty {
-    public int board_size;
-    public int[] hole_range;
-    public int max_tries;
-
-    public Difficulty(int board_size, int[] hole_range, int max_tries) {
-        this.board_size = board_size;
-        this.hole_range = hole_range;
-        this.max_tries = max_tries;
-    }
-}
-
-class Map {
-    private String[] _key_set;
-    private Difficulty[] _value_arr;
-    private int _size;
-
-    public Map(int max_size) {
-        this._key_set = new String[max_size];
-
-        this._value_arr = new Difficulty[max_size];
-        this._size = 0;
-    }
-
-    public void put(String key, Difficulty value) {
-        if (!containsKey(key)) {
-            _key_set[_size] = key;
-            _value_arr[_size] = value;
-            _size++;
-        } else {
-            update(key, value);
-        }
-    }
-
-    public Difficulty get(String key) {
-        for (int i = 0; i < _size; i++) {
-            if (_key_set[i].equals(key)) {
-                return _value_arr[i];
-            }
-        }
-        return null;
-    }
-
-    public boolean containsKey(String key) {
-        return get(key) != null;
-    }
-
-    public void update(String key, Difficulty value) {
-        for (int i = 0; i < _size; i++) {
-            if (_key_set[i].equals(key)) {
-                _value_arr[i] = value;
-            }
-        }
-    }
-}
+import Controller.Controller;
 
 public class SudokuFrame extends JFrame {
     private Timer timer;
     private JLabel timerLabel;
     private static int[][] unsolved_board_;
     private static int[][] solved_board_;
-    private static Map difficulties = new Map(3);
+    private static DifficultyMap difficulties = new DifficultyMap(3);
     private boolean difficulty_level = false;
-    //TODO: change this variable after difficulty chosen
     private static String difficulty_ = "easy"; // default
 
-    public SudokuFrame() {
+    public SudokuFrame(Controller controller) {
         setTitle("Sudoku - Game On!");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -90,8 +30,6 @@ public class SudokuFrame extends JFrame {
         setLocationRelativeTo(null);
         ImageIcon image = new ImageIcon("C:\\Users\\hoang\\Downloads\\Soduku\\Sudoku_logo.png");
         setIconImage(image.getImage());
-
-
 
         // holder: the parent of Board panel
         JPanel holder = new JPanel(new BorderLayout());
@@ -106,11 +44,11 @@ public class SudokuFrame extends JFrame {
         // Board panel: contains the sudoku board class
         JPanel boardPanel = new JPanel();
         boardPanel.setBackground(new Color(0x6d8fa4));
-        //GradientPanel gradientPanel = new GradientPanel("#00c16e", "#037ef3");
+        // GradientPanel gradientPanel = new GradientPanel("#00c16e", "#037ef3");
         boardPanel.setPreferredSize(new Dimension(600, 600));
         holder.add(boardPanel, BorderLayout.CENTER);
         add(holder, BorderLayout.CENTER);
-        //add(gradientPanel, BorderLayout.CENTER);
+        // add(gradientPanel, BorderLayout.CENTER);
 
         // Create an instance of the SudokuBoard class <- visualise the board with this
         // class
@@ -119,10 +57,10 @@ public class SudokuFrame extends JFrame {
 
         // Add instance to the board panel
         boardPanel.add(displayBoard, BorderLayout.CENTER);
-        
+
         // Create a panel for the buttons and timer
-        //Panel buttonAndTimerPanel = new JPanel(new BorderLayout());
-        
+        // Panel buttonAndTimerPanel = new JPanel(new BorderLayout());
+
         // Set label "CS2_Spring 2024"
         JLabel bottom_label = new JLabel();
         bottom_label.setText("Hoang Nhat Minh, Nguyen Le Na, Le Thi Que My, Nguyen Hoang Thang. CS2_2024");
@@ -165,7 +103,6 @@ public class SudokuFrame extends JFrame {
             }
         });
 
-    
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(new Color(0x102944));
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 75, 0));
@@ -179,12 +116,10 @@ public class SudokuFrame extends JFrame {
         submitButton.setFont(new Font("Garamond", Font.BOLD, 22));
         giveUpButton.setFont(new Font("Garamond", Font.BOLD, 22));
 
-
-
         newChooseLevel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
-                String[] options = {"Easy", "Medium", "Hard"};
+                String[] options = { "Easy", "Medium", "Hard" };
                 int choice = JOptionPane.showOptionDialog(
                         null,
                         "Select level:",
@@ -221,31 +156,33 @@ public class SudokuFrame extends JFrame {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 // Get current time
-                
+
                 if (!difficulty_level) {
                     JOptionPane.showMessageDialog(null, "Chọn level chưa mà đòi nộp!",
-                        "Notice", JOptionPane.WARNING_MESSAGE);
+                            "Notice", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
 
                 // Show confirmation dialog
                 JOptionPane confirmDialog = new JOptionPane("You are about to submit. Are you sure?",
-                    JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
+                        JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
                 JDialog dialog = confirmDialog.createDialog(null, "Confirmation");
                 dialog.setVisible(true);
-        
+
                 // Get user's choice
                 Object selectedValue = confirmDialog.getValue();
-        
+
                 if (selectedValue.equals(JOptionPane.YES_OPTION)) {
                     // User clicked Yes, proceed with showing the result
                     timer.stop();
                     if (checkSolution(displayBoard.getBoard())) {
                         JOptionPane.showMessageDialog(null, "bạn thật vjp pro, be my lỏd :D.");
                     } else {
-                        int false_option = JOptionPane.showOptionDialog(null, "đồ ngu ahihi, chúc bạn may mắn lần sau :p\n",
-                            "Result", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Answer", "Cancel"}, "Answer");
-                        //playBackgroundMusic("C:\\Users\\hoang\\Downloads\\Soduku\\new_backgroundsudoku.wav");
+                        int false_option = JOptionPane.showOptionDialog(null,
+                                "đồ ngu ahihi, chúc bạn may mắn lần sau :p\n",
+                                "Result", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
+                                new String[] { "Answer", "Cancel" }, "Answer");
+                        // playBackgroundMusic("C:\\Users\\hoang\\Downloads\\Soduku\\new_backgroundsudoku.wav");
                         if (false_option == JOptionPane.YES_NO_OPTION) {
                             displayBoard.updateBoard(solved_board_);
                         }
@@ -253,26 +190,25 @@ public class SudokuFrame extends JFrame {
                 }
             }
         });
-        
-
 
         giveUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 if (!difficulty_level) {
                     JOptionPane.showMessageDialog(null, "Chọn level chưa mà đòi withdraw!",
-                    "Notice", JOptionPane.WARNING_MESSAGE);
+                            "Notice", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
                 // Show confirmation dialog
-                JOptionPane gu_confirmDialog = new JOptionPane("Do you dare to give up? Chúng tôi còn không give up CS2 mà bạn give up game này",
-                    JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
+                JOptionPane gu_confirmDialog = new JOptionPane(
+                        "Do you dare to give up? Chúng tôi còn không give up CS2 mà bạn give up game này",
+                        JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
                 JDialog gu_dialog = gu_confirmDialog.createDialog(null, "Give Up");
                 gu_dialog.setVisible(true);
-        
+
                 // Get user's choice
                 Object gu_selectedValue = gu_confirmDialog.getValue();
-        
+
                 if (gu_selectedValue.equals(JOptionPane.YES_OPTION)) {
                     // User clicked Yes, proceed with showing the result
                     timer.stop();
@@ -288,11 +224,8 @@ public class SudokuFrame extends JFrame {
 
         add(buttonPanel, BorderLayout.NORTH);
 
-        
-
         setVisible(true);
 
-    
     }
 
     private static void fillDifficulties(int max_tries) {
@@ -357,14 +290,4 @@ public class SudokuFrame extends JFrame {
         }
         return true;
     }
-
-    public static void main(String[] args) {
-        fillDifficulties(200);
-        renewBoard(difficulty_);
-
-        // Sudoku frame driver
-        SwingUtilities.invokeLater(SudokuFrame::new);
-    }
-
-   
 }

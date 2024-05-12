@@ -1,4 +1,4 @@
-package BoardScreen;
+package GameScreen;
 import Solver.SudokuRandomizer;
 
 import java.awt.Color;
