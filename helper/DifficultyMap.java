@@ -1,4 +1,4 @@
-package GameScreen.helper;
+package helper;
 
 public class DifficultyMap {
     private String[] _key_set;

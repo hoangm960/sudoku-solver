@@ -1,4 +1,4 @@
-package GameScreen.helper;
+package helper;
 
 public class Difficulty {
     public int board_size;

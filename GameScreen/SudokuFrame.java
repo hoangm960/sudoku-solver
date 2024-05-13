@@ -2,17 +2,19 @@ package GameScreen;
 
 import Solver.SudokuRandomizer;
 import Solver.SudokuSolver;
+import helper.Difficulty;
+import helper.DifficultyMap;
 
 import javax.swing.*;
-
-import GameScreen.helper.Difficulty;
-import GameScreen.helper.DifficultyMap;
 
 import java.awt.*;
 import java.awt.event.*;
 import Controller.Controller;
+
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowAdapter;
+import helper.Constant;
+
 
 
 public class SudokuFrame extends JFrame {
@@ -31,7 +33,7 @@ public class SudokuFrame extends JFrame {
         setLayout(new BorderLayout());
         setSize(800, 820);
         setLocationRelativeTo(null);
-        ImageIcon image = new ImageIcon("C:\\Users\\hoang\\Downloads\\Soduku\\Sudoku_logo.png");
+        ImageIcon image = new ImageIcon(Constant.getLogoLink());
         setIconImage(image.getImage());
 
         // holder: the parent of Board panel
@@ -186,7 +188,7 @@ public class SudokuFrame extends JFrame {
                                 "đồ ngu ahihi, chúc bạn may mắn lần sau :p\n",
                                 "Result", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
                                 new String[] { "Answer", "Cancel" }, "Answer");
-                        // playBackgroundMusic("C:\\Users\\hoang\\Downloads\\Soduku\\new_backgroundsudoku.wav");
+
                         if (false_option == JOptionPane.YES_NO_OPTION) {
                             displayBoard.updateBoard(solved_board_);
                         }

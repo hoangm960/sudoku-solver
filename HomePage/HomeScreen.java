@@ -8,11 +8,11 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.*;
-import java.net.URL;
 
 import javax.sound.sampled.*;
 
 import Controller.Controller;
+import helper.Constant;
 
 public class HomeScreen extends JFrame {
     private boolean is_musicPlaying = true;
@@ -27,7 +27,7 @@ public class HomeScreen extends JFrame {
         setLocationRelativeTo(null);
 
         // Set the icon logo
-        ImageIcon image = new ImageIcon(this.getClass().getResource("assets/Sudoku_logo.png"));
+        ImageIcon image = new ImageIcon(Constant.getLogoLink());
         setIconImage(image.getImage());
 
         // Set label "CS2_Spring 2024"
@@ -41,14 +41,13 @@ public class HomeScreen extends JFrame {
         bottomPanel.add(label);
         add(bottomPanel, BorderLayout.SOUTH);
         bottomPanel.setBackground(new Color(0xfefefe));
-        ;
 
         // Create a gradient panel with colors #00c16e and #037ef3 from left to right
         GradientPanel gradientPanel = new GradientPanel("#b6cdce", "#6d8fa4");
         add(gradientPanel, BorderLayout.CENTER);
 
         // Play background music
-        playBackgroundMusic(this.getClass().getResource("assets/background_music.wav"));
+        playBackgroundMusic(Constant.getMusicLink());
 
         // Create a button
         // button PlayGame
@@ -130,7 +129,7 @@ public class HomeScreen extends JFrame {
             off_volume(); // Nếu nhạc đang chạy, tắt nó
             volume_button.setText("VOLUME: OFF"); // Thay đổi văn bản của nút thành "Volume: Off"
         } else {
-            playBackgroundMusic(this.getClass().getResource("assets/background_music.wav"));
+            playBackgroundMusic(Constant.getMusicLink());
             // Nếu nhạc đang tắt, bật nó
             volume_button.setText("VOLUME: ON"); // Thay đổi văn bản của nút thành "Volume: On"
         }
@@ -226,9 +225,8 @@ public class HomeScreen extends JFrame {
     }
 
     // Music function
-    public void playBackgroundMusic(URL url) {
+    public void playBackgroundMusic(File audioFile) {
         try {
-            File audioFile = new File(url.getFile().replace("%20", " "));
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
 
             AudioFormat format = audioStream.getFormat();
