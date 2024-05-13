@@ -107,7 +107,7 @@ public class HomeScreen extends JFrame {
         gradientPanel.add(credit_button); // Add button to the gradient panel
 
         // create a button to adjust the volume
-        volume_button = new JButton("BACKGROUND MUSIC: ON");
+        volume_button = new JButton("VOLUME: ON");
         volume_button.setBackground(new Color(0xe4e0e7));
         volume_button.setFont(new Font("Garamond", Font.BOLD, 30));
         volume_button.setForeground(Color.BLACK);
@@ -128,11 +128,11 @@ public class HomeScreen extends JFrame {
     private void on_volume() {
         if (is_musicPlaying) {
             off_volume(); // Nếu nhạc đang chạy, tắt nó
-            volume_button.setText("BACKGROUND MUSIC: OFF"); // Thay đổi văn bản của nút thành "Volume: Off"
+            volume_button.setText("VOLUME: OFF"); // Thay đổi văn bản của nút thành "Volume: Off"
         } else {
             playBackgroundMusic(this.getClass().getResource("assets/background_music.wav"));
             // Nếu nhạc đang tắt, bật nó
-            volume_button.setText("BACKGROUND MUSIC: ON"); // Thay đổi văn bản của nút thành "Volume: On"
+            volume_button.setText("VOLUME: ON"); // Thay đổi văn bản của nút thành "Volume: On"
         }
         is_musicPlaying = !is_musicPlaying; // Đảo ngược trạng thái của biến cờ
     }
