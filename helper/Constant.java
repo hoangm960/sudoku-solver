@@ -3,7 +3,7 @@ package helper;
 import java.io.File;
 
 public class Constant {
-    private static String logo_link_ = "../assets/Sudoku_logo.png";
+    private static String logo_link_ = "assets/Sudoku_logo.png";
     private static String music_link_ = "assets/background_music.wav";
 
     public static String getLogoLink() {
