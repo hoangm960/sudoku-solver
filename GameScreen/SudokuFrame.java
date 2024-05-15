@@ -25,7 +25,7 @@ public class SudokuFrame extends JFrame {
     private static DifficultyMap difficulties = new DifficultyMap(3);
     private boolean difficulty_level = false;
     private static String difficulty_ = "easy"; // default
-    private int hours = 0, minutes = 0, seconds = 0
+    private int hours = 0, minutes = 0, seconds = 0;
 
     public SudokuFrame(Controller controller) {
         setTitle("Sudoku - Game On!");
@@ -249,7 +249,7 @@ public class SudokuFrame extends JFrame {
         seconds = 0;
         timerLabel.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
     }
-    
+
     private static void fillDifficulties(int max_tries) {
         String[] difficultyTypes = { "easy", "medium", "hard" };
         for (int i = 30; i <= 50; i += 10) {
